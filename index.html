@@ -668,18 +668,20 @@ function renderHistory() {
     return;
   }
   list.innerHTML = filtered.map(o => {
-    const comm = o.type==='delivery' ? (o.total||0)*0.04 : 0;
-    return `<div class="history-item">
-      <div class="history-dot" style="background:${o.type==='delivery'?'var(--accent)':'var(--green)'}"></div>
-      <div class="history-info">
-        <div class="history-name">${o.name} · #${(o.code||'').slice(-4)}</div>
-        <div class="history-meta">${fmtTime(o.time)} · ${o.type==='delivery'?'🛵 Delivery':'🛍 Pick Up'} · ${o.paymentMethod||'TNG'}${o.screenshotBase64?' · <span style="color:var(--green2);">📎 Receipt</span>':''}</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="history-amt">RM ${(o.total||0).toFixed(2)}</div>
-        ${o.riderEarning>0?`<div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;text-align:right;">RM ${o.riderEarning.toFixed(2)} → rider</div>`:''}
-      </div>
-    </div>`;
+    const riderLine = o.riderEarning > 0
+      ? '<div style="font-size:11px;color:var(--accent);font-family:\'DM Mono\',monospace;text-align:right;">RM ' + o.riderEarning.toFixed(2) + ' → rider</div>'
+      : '';
+    return '<div class="history-item">' +
+      '<div class="history-dot" style="background:' + (o.type==='delivery'?'var(--accent)':'var(--green)') + '"></div>' +
+      '<div class="history-info">' +
+        '<div class="history-name">' + o.name + ' · #' + (o.code||'').slice(-4) + '</div>' +
+        '<div class="history-meta">' + fmtTime(o.time) + ' · ' + (o.type==='delivery'?'🛵 Delivery':'🛍 Pick Up') + ' · ' + (o.paymentMethod||'TNG') + (o.screenshotBase64?' · <span style="color:var(--green2);">📎 Receipt</span>':'') + '</div>' +
+      '</div>' +
+      '<div style="text-align:right;">' +
+        '<div class="history-amt">RM ' + (o.total||0).toFixed(2) + '</div>' +
+        riderLine +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
@@ -708,28 +710,6 @@ function renderEarnings() {
   if(noteEl) noteEl.textContent = 'RM '+riderEarningsTotal.toFixed(2)+' delivery fees → paid to Riders';
 }
 
-
-
-
-
-
-    const items=[];
-    snap.forEach(d=>items.push(d.data()));
-    items.sort((a,b)=>b.date.localeCompare(a.date));
-    list.innerHTML=items.map(s=>`
-      <div class="settle-history-item">
-        <div style="width:36px;height:36px;border-radius:10px;background:${s.status==='confirmed'?'rgba(76,175,125,0.15)':'rgba(245,158,11,0.15)'};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">${s.status==='confirmed'?'✅':'⏳'}</div>
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--cream);">${s.date}</div>
-          <div style="font-size:11px;color:var(--text3);">${s.orderCount} orders · ${s.status==='confirmed'?'<span style="color:var(--green2);">Confirmed ✅</span>':'<span style="color:var(--amber);">Pending ⏳</span>'}</div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--cream);">RM ${(s.amount||0).toFixed(2)}</div>
-          ${s.screenshot?`<div onclick="viewScreenshot(this)" data-src="${s.screenshot}" style="font-size:11px;color:var(--accent);cursor:pointer;margin-top:2px;">📎 View</div>`:''}
-        </div>
-      </div>`).join('');
-  }catch(e){console.error(e);}
-}
 
 // ── NAVIGATION ──
 function switchPage(name, el) {
