@@ -374,8 +374,6 @@ body{
   <div id="page-history" class="page">
     <div class="stats-grid">
       <div class="stat-card green"><div class="stat-val" id="h-total-rev">RM 0</div><div class="stat-label">Total Revenue</div></div>
-      <div class="stat-card amber"><div class="stat-val" id="h-commission">RM 0</div><div class="stat-label">Platform Fee (4%)</div></div>
-      <div class="stat-card"><div class="stat-val" id="h-nett">RM 0</div><div class="stat-label">Nett Earnings</div></div>
       <div class="stat-card accent"><div class="stat-val" id="h-total-orders">0</div><div class="stat-label">Total Orders</div></div>
     </div>
 
@@ -392,21 +390,20 @@ body{
 
   <div id="page-earnings" class="page">
     <div class="earn-card">
-      <div class="earn-label">This Month Nett Earnings</div>
+      <div class="earn-label">This Month Earnings</div>
       <div class="earn-amount" id="earn-month">RM 0</div>
-      <div class="earn-sub">After 4% platform fee on delivery orders</div>
+      <div class="earn-sub">100% of your revenue, free forever</div>
     </div>
     <div class="stats-grid">
       <div class="stat-card green"><div class="stat-val" id="earn-delivery-rev">RM 0</div><div class="stat-label">Delivery Revenue</div></div>
       <div class="stat-card"><div class="stat-val" id="earn-pickup-rev">RM 0</div><div class="stat-label">Pick Up Revenue</div></div>
-      <div class="stat-card amber"><div class="stat-val" id="earn-commission">RM 0</div><div class="stat-label">Platform Fee Paid</div></div>
       <div class="stat-card accent"><div class="stat-val" id="earn-total-orders">0</div><div class="stat-label">Total Orders</div></div>
     </div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-top:4px;">
-      <div style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">Fee Breakdown</div>
+      <div style="font-size:11px;color:var(--text3);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">Platform Policy</div>
       <div style="font-size:13px;color:var(--text2);line-height:2.2;">
-        Pick Up → <span style="color:var(--green2);font-weight:700;">0% platform fee ✅</span><br>
-        Delivery → <span style="color:var(--red);font-weight:700;">4% platform fee</span> on food subtotal<br>
+        Pick Up → <span style="color:var(--green2);font-weight:700;">FREE — 0% fee ✅</span><br>
+        Delivery → <span style="color:var(--green2);font-weight:700;">FREE — 0% fee ✅</span><br>
         Delivery fee (RM 2) → <span style="color:var(--accent);font-weight:700;">goes to Rider</span> (not merchant)
       </div>
       <div id="earn-rider-note" style="margin-top:10px;font-size:12px;color:var(--accent);font-family:'DM Mono',monospace;"></div>
@@ -428,51 +425,8 @@ body{
       <div class="tab-icon">💰</div>
       <div class="tab-label">EARNINGS</div>
     </div>
-    <div class="tab-item" id="tab-settle" onclick="switchPage('settle',this)">
-      <div class="tab-dot" id="settle-dot"></div>
-      <div class="tab-icon">🏦</div>
-      <div class="tab-label">SETTLE</div>
-    </div>
+
   </div>
-  <div id="page-settle" class="page">
-
-    <!-- Today's debt summary -->
-    <div class="settle-card">
-      <div style="font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em;font-family:'DM Mono',monospace;margin-bottom:8px;">📅 TODAY'S SETTLEMENT</div>
-      <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;">
-        <div class="settle-amount" id="settle-today-amt">RM 0.00</div>
-        <div style="font-size:12px;color:var(--text3);padding-bottom:6px;">due to MIDI platform</div>
-      </div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:6px;" id="settle-today-breakdown">—</div>
-      <div style="background:rgba(77,159,255,0.08);border:1px solid rgba(77,159,255,0.15);border-radius:10px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--text2);">
-        ℹ️ Includes delivery fee (RM 2/order) — MIDI will pay riders on your behalf
-      </div>
-
-      <!-- Upload proof -->
-      <div style="font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Upload Transfer Proof</div>
-      <div class="settle-upload" id="settle-upload-zone" onclick="document.getElementById('settle-file').click()">
-        <input type="file" id="settle-file" accept="image/*" onchange="handleSettleUpload(event)">
-        <img id="settle-preview" class="settle-preview">
-        <div id="settle-placeholder">
-          <div style="font-size:24px;margin-bottom:6px;">📎</div>
-          <div style="font-size:13px;font-weight:600;color:var(--text2);">Tap to upload TNG screenshot</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:3px;">Transfer to 019-7557555</div>
-        </div>
-      </div>
-
-      <button class="settle-btn" id="settle-submit-btn" onclick="submitSettlement()" disabled>
-        Submit Settlement
-      </button>
-    </div>
-
-    <!-- Pending settlements -->
-    <div class="section-title">Settlement History</div>
-    <div id="settle-history-list">
-      <div class="empty"><div class="empty-icon">🏦</div><div class="empty-title">No settlements yet</div></div>
-    </div>
-  </div>
-
-</div>
 
 <div id="toast"></div>
 
@@ -557,7 +511,6 @@ function startListening() {
     renderHistory();
     renderEarnings();
     updateStats();
-    if(document.getElementById('page-settle').classList.contains('active')) renderSettle();
   });
 }
 
@@ -705,12 +658,8 @@ function renderHistory() {
   if (histFilter==='week')  filtered = done.filter(o => o.time >= weekStart);
 
   const totalRev   = filtered.reduce((s,o)=>s+(o.foodTotal||o.total||0),0);
-  const commission = filtered.reduce((s,o)=>s+(o.platformComm||0),0);
-  const nett       = filtered.reduce((s,o)=>s+(o.merchantNett!==undefined ? o.merchantNett : (o.foodTotal||o.total||0)),0);
 
   document.getElementById('h-total-rev').textContent  = 'RM '+totalRev.toFixed(2);
-  document.getElementById('h-commission').textContent = 'RM '+commission.toFixed(2);
-  document.getElementById('h-nett').textContent       = 'RM '+nett.toFixed(2);
   document.getElementById('h-total-orders').textContent = filtered.length;
 
   const list = document.getElementById('history-list');
@@ -728,7 +677,6 @@ function renderHistory() {
       </div>
       <div style="text-align:right;">
         <div class="history-amt">RM ${(o.total||0).toFixed(2)}</div>
-        ${o.platformComm>0?`<div class="history-comm">-RM ${(o.platformComm||comm).toFixed(2)} platform fee</div>`:''}
         ${o.riderEarning>0?`<div style="font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;text-align:right;">RM ${o.riderEarning.toFixed(2)} → rider</div>`:''}
       </div>
     </div>`;
@@ -746,16 +694,13 @@ function renderEarnings() {
   const pickupOrders = done.filter(o=>o.type==='pickup');
   const delivRev     = delivOrders.reduce((s,o)=>s+(o.foodTotal||o.total||0),0);
   const pickupRev    = pickupOrders.reduce((s,o)=>s+(o.foodTotal||o.total||0),0);
-  const commission   = done.reduce((s,o)=>s+(o.platformComm||0),0);
 
   const monthFoodRev = thisMonth.reduce((s,o)=>s+(o.foodTotal||o.total||0),0);
-  const monthComm    = thisMonth.reduce((s,o)=>s+(o.platformComm||0),0);
   const monthNett    = thisMonth.reduce((s,o)=>s+(o.merchantNett!==undefined?o.merchantNett:(o.foodTotal||o.total||0)),0);
 
   document.getElementById('earn-month').textContent        = 'RM '+monthNett.toFixed(2);
   document.getElementById('earn-delivery-rev').textContent = 'RM '+delivRev.toFixed(2);
   document.getElementById('earn-pickup-rev').textContent   = 'RM '+pickupRev.toFixed(2);
-  document.getElementById('earn-commission').textContent   = 'RM '+commission.toFixed(2);
   document.getElementById('earn-total-orders').textContent = done.length;
   // Show note that delivery fee goes to rider not merchant
   const riderEarningsTotal = done.filter(o=>o.type==='delivery').reduce((s,o)=>s+(o.riderEarning||2),0);
@@ -763,85 +708,11 @@ function renderEarnings() {
   if(noteEl) noteEl.textContent = 'RM '+riderEarningsTotal.toFixed(2)+' delivery fees → paid to Riders';
 }
 
-// ── SETTLEMENT ──
-let settleBase64 = null;
 
-function calcTodayDebt(){
-  const today=new Date(); today.setHours(0,0,0,0);
-  const done=orders.filter(o=>o.status==='done'&&o.time>=today);
-  const sf  = done.reduce((s,o)=>s+(o.serviceFee||0.50),0);
-  const cm  = done.reduce((s,o)=>s+(o.platformComm||0),0);
-  const df  = done.reduce((s,o)=>s+(o.deliveryFee||0),0); // RM 2 per delivery → you pay rider
-  const total = sf + cm + df;
-  return {serviceFee:sf, commission:cm, deliveryFee:df, total, count:done.length};
-}
 
-function renderSettle(){
-  const {serviceFee,commission,total,count}=calcTodayDebt();
-  const el1=document.getElementById('settle-today-amt');
-  const el2=document.getElementById('settle-today-breakdown');
-  if(el1) el1.textContent='RM '+total.toFixed(2);
-  if(el2) el2.textContent=count+' orders · Service: RM '+serviceFee.toFixed(2)+' · Commission: RM '+commission.toFixed(2)+(deliveryFee>0?' · Delivery: RM '+deliveryFee.toFixed(2):'');
-  const dot=document.getElementById('settle-dot');
-  if(dot) dot.style.display=total>0?'block':'none';
-  renderSettleHistory();
-}
 
-function handleSettleUpload(event){
-  const file=event.target.files[0]; if(!file) return;
-  const img=new Image(); const url=URL.createObjectURL(file);
-  img.onload=()=>{
-    const canvas=document.createElement('canvas');
-    const MAX=600; let w=img.width,h=img.height;
-    if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
-    if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
-    canvas.width=w; canvas.height=h;
-    canvas.getContext('2d').drawImage(img,0,0,w,h);
-    settleBase64=canvas.toDataURL('image/jpeg',0.75).split(',')[1];
-    URL.revokeObjectURL(url);
-    document.getElementById('settle-preview').src='data:image/jpeg;base64,'+settleBase64;
-    document.getElementById('settle-preview').style.display='block';
-    document.getElementById('settle-placeholder').style.display='none';
-    document.getElementById('settle-upload-zone').classList.add('has-img');
-    const btn=document.getElementById('settle-submit-btn');
-    btn.disabled=false; btn.textContent='Submit Settlement ✅';
-  };
-  img.src=url;
-}
-window.handleSettleUpload=handleSettleUpload;
 
-async function submitSettlement(){
-  if(!settleBase64) return;
-  const {serviceFee,commission,deliveryFee,total,count}=calcTodayDebt();
-  if(total<=0){toast('⚠️ No outstanding fees today');return;}
-  const btn=document.getElementById('settle-submit-btn');
-  btn.textContent='⏳ Submitting…'; btn.disabled=true;
-  const today=new Date().toISOString().slice(0,10);
-  try{
-    await setDoc(doc(db,'settlements',merchantId+'_'+today),{
-      merchantId, merchantName:merchantData.name,
-      date:today, amount:total, serviceFee, commission, deliveryFee,
-      orderCount:count, screenshot:settleBase64,
-      status:'pending', submittedAt:new Date().toISOString(),
-    });
-    toast('✅ Settlement submitted! Admin will confirm.');
-    settleBase64=null;
-    document.getElementById('settle-upload-zone').classList.remove('has-img');
-    document.getElementById('settle-preview').style.display='none';
-    document.getElementById('settle-placeholder').style.display='block';
-    document.getElementById('settle-file').value='';
-    btn.textContent='Submit Settlement'; btn.disabled=true;
-    renderSettleHistory();
-  }catch(e){toast('❌ '+e.message);btn.textContent='Submit Settlement ✅';btn.disabled=false;}
-}
-window.submitSettlement=submitSettlement;
 
-async function renderSettleHistory(){
-  const list=document.getElementById('settle-history-list');
-  if(!list) return;
-  try{
-    const snap=await getDocs(query(collection(db,'settlements'),where('merchantId','==',merchantId)));
-    if(snap.empty){list.innerHTML='<div class="empty"><div class="empty-icon">🏦</div><div class="empty-title">No settlements yet</div></div>';return;}
     const items=[];
     snap.forEach(d=>items.push(d.data()));
     items.sort((a,b)=>b.date.localeCompare(a.date));
@@ -868,7 +739,7 @@ function switchPage(name, el) {
   el.classList.add('active');
   if(name==='history') renderHistory();
   if(name==='earnings') renderEarnings();
-  if(name==='settle') renderSettle();
+
 }
 window.switchPage = switchPage;
 
