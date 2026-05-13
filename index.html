@@ -556,7 +556,7 @@ function renderOrders() {
 
       <div class="order-meta">
         ${statusBadge(o.status||'new')}
-        <span class="badge ${o.type==='delivery'?'badge-delivery':'badge-pickup'}">${o.type==='delivery'?'🛵 Delivery':'🛍 Pick Up'}</span>
+        <span class="badge ${o.type==='delivery'?'badge-delivery':'badge-pickup'}">${o.type==='delivery'?'📋 Pre-order':'🛍 Pick Up'}</span>
         <span class="badge ${o.paymentMethod==='Cash'?'badge-cash':'badge-pickup'}">${o.paymentMethod==='Cash'?'💵 Cash':'💳 TNG'}</span>
       </div>
 
@@ -590,8 +590,8 @@ function renderOrders() {
       <div class="action-row">
         ${o.status==='new'      ? `<button class="btn-primary" onclick="acceptOrder('${o.docId}')">✅ Accept &amp; Prepare</button>` : ''}
         ${o.status==='preparing'? `<button class="btn-success solid" onclick="markReady('${o.docId}')">🍱 Food is Ready!</button>` : ''}
-        ${o.status==='ready'&&o.type==='pickup'? `<button class="btn-success solid" onclick="markDone('${o.docId}')">✅ Customer Collected</button>` : ''}
-        ${o.status==='delivering'? `<div style="font-size:12px;color:var(--accent);font-weight:600;padding:8px 0;">🛵 Rider is delivering…</div>` : ''}
+        ${o.status==='ready'? `<button class="btn-success solid" onclick="markDone('${o.docId}')">✅ Customer Collected</button>` : ''}
+        ${o.status==='delivering'? `<button class="btn-success solid" onclick="markDone('${o.docId}')">✅ Customer Collected</button>` : ''}
       </div>
     </div>`).join('');
 }
@@ -675,7 +675,7 @@ function renderHistory() {
       '<div class="history-dot" style="background:' + (o.type==='delivery'?'var(--accent)':'var(--green)') + '"></div>' +
       '<div class="history-info">' +
         '<div class="history-name">' + o.name + ' · #' + (o.code||'').slice(-4) + '</div>' +
-        '<div class="history-meta">' + fmtTime(o.time) + ' · ' + (o.type==='delivery'?'🛵 Delivery':'🛍 Pick Up') + ' · ' + (o.paymentMethod||'TNG') + (o.screenshotBase64?' · <span style="color:var(--green2);">📎 Receipt</span>':'') + '</div>' +
+        '<div class="history-meta">' + fmtTime(o.time) + ' · ' + (o.type==='delivery'?'📋 Pre-order':'🛍 Pick Up') + ' · ' + (o.paymentMethod||'TNG') + (o.screenshotBase64?' · <span style="color:var(--green2);">📎 Receipt</span>':'') + '</div>' +
       '</div>' +
       '<div style="text-align:right;">' +
         '<div class="history-amt">RM ' + (o.total||0).toFixed(2) + '</div>' +
