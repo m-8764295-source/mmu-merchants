@@ -409,7 +409,7 @@ function buildCard(o) {
   }
 
   if (hasScreenshot) {
-    actions += `<button class="action-btn btn-secondary" onclick="openImgModal('${o.screenshotUrl}')">🧾 Receipt</button>`;
+    actions += `<button class="action-btn btn-secondary" data-url="${o.screenshotUrl}" onclick="openImgModal(this.dataset.url)">🧾 Receipt</button>`;
   }
 
   return `
