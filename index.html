@@ -355,9 +355,10 @@ function renderOrders() {
   grid.innerHTML = orders.map(o => buildCard(o)).join('');
 }
 
-function typeIcon(type) {
-  if (type === 'delivery') return { icon:'🛵', cls:'delivery' };
-  if (type === 'preorder') return { icon:'📋', cls:'preorder' };
+function typeIcon(o) {
+  const isRealDelivery = o.type === 'delivery' && o.merchantId === 'mad_drink_lab';
+  if (isRealDelivery) return { icon:'🛵', cls:'delivery' };
+  if (o.type === 'preorder' || o.type === 'delivery') return { icon:'📋', cls:'preorder' };
   return { icon:'🛍', cls:'pickup' };
 }
 
@@ -375,14 +376,22 @@ function statusBadge(status) {
 }
 
 function buildCard(o) {
-  const ti = typeIcon(o.type);
+  const ti = typeIcon(o);
   const date = o.timestamp?.toDate ? o.timestamp.toDate().toLocaleString('en-MY', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
   const items = (o.items||[]).map(i => `${i.emoji} ${i.name} ×${i.qty}`).join(' · ');
 
+  // Oya old orders stored type='delivery' but are actually preorder (slot-based)
+  // Real delivery = MAD only (mad_drink_lab)
+  const isRealDelivery = o.type === 'delivery' && o.merchantId === 'mad_drink_lab';
+  const isPreorder     = o.type === 'preorder' || (o.type === 'delivery' && o.merchantId === 'soy_oden');
+
   let infoRows = '';
-  if (o.type === 'preorder' && o.slot)
-    infoRows += `<div class="info-row">📅 <b>Slot:</b> ${o.slot}</div>`;
-  if (o.type === 'delivery') {
+  if (isPreorder) {
+    // slot field (old Oya orders used o.address as slot)
+    const slotVal = o.slot || o.address || null;
+    if (slotVal) infoRows += `<div class="info-row">📅 <b>Slot:</b> ${slotVal}</div>`;
+  }
+  if (isRealDelivery) {
     if (o.address) infoRows += `<div class="info-row">📍 <b>Address:</b> ${o.address}</div>`;
     if (o.deliverySlot || o.slot) infoRows += `<div class="info-row">📅 <b>Slot:</b> ${o.deliverySlot || o.slot}</div>`;
     if (o.rider) infoRows += `<div class="info-row">🛵 <b>Rider:</b> ${o.rider}</div>`;
@@ -392,14 +401,14 @@ function buildCard(o) {
 
   const hasScreenshot = !!o.screenshotUrl;
 
-  // Action buttons based on status + type
+  // Action buttons
   let actions = '';
   if (o.status === 'new') {
     actions = `<button class="action-btn btn-confirm" onclick="updateStatus('${o.id}','preparing')">👨‍🍳 Start Preparing</button>`;
   } else if (o.status === 'preparing') {
     actions = `<button class="action-btn btn-ready" onclick="updateStatus('${o.id}','ready')">✅ Mark Ready</button>`;
   } else if (o.status === 'ready') {
-    if (o.type === 'delivery') {
+    if (isRealDelivery) {
       actions = `<button class="action-btn btn-assign" onclick="openRiderModal('${o.id}','${o.code||''}')">🛵 Assign Rider</button>`;
     } else {
       actions = `<button class="action-btn btn-done" onclick="updateStatus('${o.id}','done')">🎉 Mark Done</button>`;
