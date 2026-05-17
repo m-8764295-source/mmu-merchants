@@ -94,7 +94,6 @@
   .btn-confirm { background:#1B3FA0; color:#fff; }
   .btn-prepare { background:#0288D1; color:#fff; }
   .btn-ready { background:#2E7D32; color:#fff; }
-  .btn-assign { background:#7B1FA2; color:#fff; }
   .btn-done { background:#546E7A; color:#fff; }
   .btn-secondary { background:#F5F5F7; color:#555; border:1.5px solid #e5e5e7; }
 
@@ -194,10 +193,6 @@
   </div>
 </div>
 
-<!-- ── Rider Assign Modal ── -->
-<div class="modal-overlay" id="rider-modal">
-  <div class="modal">
-    <div class="modal-title">🛵 Assign Rider</div>
     <div class="modal-sub" id="rider-modal-sub">Order #—</div>
     <input class="rider-input" id="rider-name-input" placeholder="Rider name…">
     <input class="rider-input" id="rider-phone-input" placeholder="Rider phone (optional)">
@@ -409,12 +404,12 @@ function buildCard(o) {
     actions = `<button class="action-btn btn-ready" onclick="updateStatus('${o.id}','ready')">✅ Mark Ready</button>`;
   } else if (o.status === 'ready') {
     if (isRealDelivery) {
-      actions = `<button class="action-btn btn-assign" onclick="openRiderModal('${o.id}','${o.code||''}')">🛵 Assign Rider</button>`;
+      actions = `<span style="font-size:12px;color:#a855f7;font-weight:600;">⏳ Waiting for rider…</span>`;
     } else {
       actions = `<button class="action-btn btn-done" onclick="updateStatus('${o.id}','done')">🎉 Mark Done</button>`;
     }
   } else if (o.status === 'delivering') {
-    actions = `<button class="action-btn btn-done" onclick="updateStatus('${o.id}','done')">🎉 Delivered</button>`;
+    actions = `<span style="font-size:12px;color:#22c55e;font-weight:600;">🛵 ${o.rider||'Rider'} on the way</span>`;
   }
 
   if (hasScreenshot) {
@@ -454,38 +449,6 @@ window.updateStatus = async function(id, status) {
 };
 
 // ── Rider modal ──
-window.openRiderModal = function(orderId, code) {
-  riderTargetId = orderId;
-  document.getElementById('rider-modal-sub').textContent = 'Order ' + code;
-  document.getElementById('rider-name-input').value = '';
-  document.getElementById('rider-phone-input').value = '';
-  document.getElementById('rider-modal').classList.add('open');
-};
-window.closeRiderModal = function() {
-  document.getElementById('rider-modal').classList.remove('open');
-  riderTargetId = null;
-};
-window.setRiderPreset = function(name) {
-  document.getElementById('rider-name-input').value = name;
-};
-window.confirmAssignRider = async function() {
-  const name  = document.getElementById('rider-name-input').value.trim();
-  const phone = document.getElementById('rider-phone-input').value.trim();
-  if (!name) { alert('Please enter rider name.'); return; }
-  if (!riderTargetId) return;
-  try {
-    await updateDoc(doc(db, 'orders', riderTargetId), {
-      status:      'delivering',
-      rider:       name,
-      riderPhone:  phone || null,
-      updatedAt:   serverTimestamp(),
-    });
-    showToast('🛵 Rider assigned: ' + name);
-    closeRiderModal();
-  } catch(e) {
-    showToast('❌ Failed: ' + e.message);
-  }
-};
 
 // ── Screenshot modal ──
 window.openImgModal = function(url) {
