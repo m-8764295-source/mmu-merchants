@@ -97,20 +97,6 @@
   .btn-done { background:#546E7A; color:#fff; }
   .btn-secondary { background:#F5F5F7; color:#555; border:1.5px solid #e5e5e7; }
 
-  /* ── Rider assign modal ── */
-  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:999; padding:20px; }
-  .modal-overlay.open { display:flex; }
-  .modal { background:#fff; border-radius:24px; padding:28px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,0.2); }
-  .modal-title { font-size:18px; font-weight:800; margin-bottom:6px; }
-  .modal-sub { font-size:13px; color:#888; margin-bottom:20px; }
-  .rider-input { width:100%; padding:12px 14px; border:1.5px solid #e5e5e7; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:14px; outline:none; margin-bottom:10px; }
-  .rider-input:focus { border-color:#7B1FA2; }
-  .rider-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
-  .rider-preset { padding:7px 14px; border-radius:100px; background:#F3E5F5; color:#7B1FA2; font-size:12px; font-weight:700; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; }
-  .modal-actions { display:flex; gap:10px; }
-  .modal-confirm { flex:1; padding:13px; background:#7B1FA2; color:#fff; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
-  .modal-cancel { padding:13px 20px; background:#F5F5F7; color:#555; border:none; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; }
-
   /* ── Screenshot modal ── */
   .img-modal { position:fixed; inset:0; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px; cursor:pointer; }
   .img-modal.open { display:flex; }
@@ -193,22 +179,6 @@
   </div>
 </div>
 
-    <div class="modal-sub" id="rider-modal-sub">Order #—</div>
-    <input class="rider-input" id="rider-name-input" placeholder="Rider name…">
-    <input class="rider-input" id="rider-phone-input" placeholder="Rider phone (optional)">
-    <div class="rider-presets" id="rider-presets">
-      <button class="rider-preset" onclick="setRiderPreset('Ali')">Ali</button>
-      <button class="rider-preset" onclick="setRiderPreset('Hafiz')">Hafiz</button>
-      <button class="rider-preset" onclick="setRiderPreset('Zack')">Zack</button>
-      <button class="rider-preset" onclick="setRiderPreset('Amin')">Amin</button>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-cancel" onclick="closeRiderModal()">Cancel</button>
-      <button class="modal-confirm" onclick="confirmAssignRider()">Assign & Send Out</button>
-    </div>
-  </div>
-</div>
-
 <!-- ── Screenshot Modal ── -->
 <div class="img-modal" id="img-modal" onclick="closeImgModal()">
   <img id="img-modal-src" src="">
@@ -248,7 +218,6 @@ let allOrders       = [];
 let activeTab       = 'active';
 let filterStatus    = 'all';
 let searchQ         = '';
-let riderTargetId   = null;
 let unsub           = null;
 
 // ── Auth ──
