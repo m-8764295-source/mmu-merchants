@@ -302,11 +302,15 @@ function startListening() {
   if (unsub) unsub();
   const q = query(
     collection(db, 'orders'),
-    where('merchantId', '==', currentMerchant.id),
-    orderBy('timestamp', 'desc')
+    where('merchantId', '==', currentMerchant.id)
   );
   unsub = onSnapshot(q, snap => {
     allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allOrders.sort((a,b) => {
+      const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(0);
+      const tb = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(0);
+      return tb - ta;
+    });
     updateStats();
     renderOrders();
   });
