@@ -426,7 +426,7 @@ function buildCard(o) {
     <div class="card-header">
       <div class="card-type-icon ${ti.cls}">${ti.icon}</div>
       <div class="card-meta">
-        <div class="card-code">${o.code || 'Order'} <span style="font-size:10px;font-weight:500;color:#aaa;">${o.type}</span></div>
+        <div class="card-code">${o.code || 'Order'} <span style="font-size:10px;font-weight:500;color:#aaa;">${isRealDelivery ? 'delivery' : isPreorder ? 'preorder' : 'pickup'}</span></div>
         <div class="card-sub">${date} · ${o.merchantName||''}</div>
       </div>
       ${statusBadge(o.status)}
