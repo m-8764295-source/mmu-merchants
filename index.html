@@ -342,7 +342,7 @@ function statusBadge(status) {
 function buildCard(o) {
   const ti = typeIcon(o);
   const date = o.timestamp?.toDate ? o.timestamp.toDate().toLocaleString('en-MY', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
-  const items = (o.items||[]).map(i => `${i.emoji} ${i.name} ×${i.qty}`).join(' · ');
+  const items = (o.items||[]).map(i => `${i.emoji} ${i.name} ×${i.qty}${i.custom && i.custom !== 'Standard' ? ' (' + i.custom + ')' : ''}`).join(' · ');
 
   // Oya old orders stored type='delivery' but are actually preorder (slot-based)
   // Real delivery = MAD only (mad_drink_lab)
